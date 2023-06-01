@@ -14,7 +14,7 @@ import (
 )
 
 // BATCH_SIZE is the number of wiki pages to retrieve at one time.
-const BATCH_SIZE = 10
+const BATCH_SIZE = 20
 
 func Import(wikidata string, dryrun bool, username, password, url string) error {
 	w, err := mwclient.New(url, "")
@@ -25,10 +25,6 @@ func Import(wikidata string, dryrun bool, username, password, url string) error 
 	if dryrun {
 		logrus.Info("doing dry run, will not make alterations")
 	}
-
-	w.Maxlag.On = true
-	w.Maxlag.Retries = 3
-	w.Maxlag.Timeout = "30"
 
 	err = w.Login(username, password)
 	if err != nil {
