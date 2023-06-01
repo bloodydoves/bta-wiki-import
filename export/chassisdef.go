@@ -61,7 +61,7 @@ type ChassisDef struct {
 type ChassisLocation struct {
 	Location   string
 	Hardpoints []struct {
-		WeaponMountID string
+		WeaponMount string
 		Omni        bool
 	}
 	Tonnage           float64
@@ -86,9 +86,9 @@ func (cl ChassisLocation) ToWiki(chassisID string) string {
 	omniHardpoints := []string{}
 	for _, hardpoint := range cl.Hardpoints {
 		if !hardpoint.Omni {
-			hardpoints = append(hardpoints, hardpoint.WeaponMountID)
+			hardpoints = append(hardpoints, hardpoint.WeaponMount)
 		} else {
-			omniHardpoints = append(omniHardpoints, hardpoint.WeaponMountID)
+			omniHardpoints = append(omniHardpoints, hardpoint.WeaponMount)
 		}
 	}
 

@@ -29,13 +29,17 @@ type GearCustom struct {
 
 	BonusDescriptions []string `json:",omitempty"`
 
-	EngineHeatBlock int `json:",omitempty"`
+	EngineHeatBlock struct {
+		HeatSinkCount int `json:",omitempty"`
+	} `json:",omitempty"`
 
 	Cooling struct {
 		HeatSinkDefId string `json:",omitempty"`
 	} `json:",omitempty"`
 
-	EngineCore string `json:",omitempty"`
+	EngineCore struct {
+		Rating int `json:",omitempty"`
+	} `json:",omitempty"`
 
 	ArmActuator struct {
 		AccuracyBonus int    `json:",omitempty"`
@@ -107,7 +111,7 @@ type Weapon struct {
 	ShotsWhenFired             int
 	ProjectilesPerShot         int
 	AttackRecoil               int
-	Instability                float64
+	Instability                int
 	WeaponEffectID             string
 }
 
@@ -330,9 +334,6 @@ func (g Gear) ToWiki() string {
 					return ""
 				}
 				c, ok := cat["CategoryID"]
-				if !ok {
-					return ""
-				}
 				categoryString, ok := c.(string)
 				if !ok {
 					return ""
@@ -384,9 +385,9 @@ func (g Gear) ToWiki() string {
 	case CoolingWikiTemplate:
 		wt.AddArg("HeatsinkDefID", g.Custom.Cooling.HeatSinkDefId)
 	case EngineHeatBlockWikiTemplate:
-		wt.AddArg("HeatsinkCount", g.Custom.EngineHeatBlock)
+		wt.AddArg("HeatsinkCount", g.Custom.EngineHeatBlock.HeatSinkCount)
 	case EngineCoreWikiTemplate:
-		wt.AddArg("Rating", g.Custom.EngineCore)
+		wt.AddArg("Rating", g.Custom.EngineCore.Rating)
 	case EngineShieldWikiTemplate:
 		wt.AddArg("ReservedSlots", g.Custom.Weights.ReservedSlots)
 		wt.AddArg("EngineFactor", g.Custom.Weights.EngineFactor)
