@@ -111,7 +111,7 @@ func Import(wikidata string, dryrun bool, username, password, url string) error 
 			}
 
 			if strings.TrimSpace(fileContent) == strings.TrimSpace(content) {
-				logrus.Debugf("UNCHANGED %s", pageName)
+				logrus.Infof("UNCHANGED %s", pageName)
 				unchanged[pageTitle] = struct{}{}
 			} else {
 				if content != "" {

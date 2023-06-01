@@ -84,11 +84,11 @@ var PurgeCmd = &cobra.Command{
 
 func init() {
 	PurgeCmd.Flags().StringVarP(
-		&flagApiURL, "url", "u", "",
+		&flagApiURL, "url", "l", "",
 		"the wiki URL to execute the cache purge against. Expects https://WEBSITE/api.php",
 	)
 	PurgeCmd.Flags().StringVarP(
-		&flagListURL, "list", "l", "",
+		&flagListURL, "list", "t", "",
 		"the new-line delineated list of pages. Expects https://WEBSITE/files/list_of_some_kind.txt",
 	)
 }

@@ -62,7 +62,7 @@ type ChassisLocation struct {
 	Location   string
 	Hardpoints []struct {
 		WeaponMountID string
-		Omni        bool
+		Omni          bool
 	}
 	Tonnage           float64
 	InventorySlots    int
