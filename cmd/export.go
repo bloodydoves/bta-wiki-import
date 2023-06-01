@@ -51,8 +51,8 @@ var ExportCmd = &cobra.Command{
 					logrus.Infof("Skipping BLACKLISTED mech %s", mech.Chassis.Description.Name)
 					continue
 				}
-
-				filename := fmt.Sprintf("MechDef_%s.wiki", variant)
+				
+				filename := fmt.Sprintf("MechDef_%s.wiki", strings.Replace(variant, "/", "-", -1))
 
 				logrus.Debugf("Writing mech wiki %s", filename)
 
