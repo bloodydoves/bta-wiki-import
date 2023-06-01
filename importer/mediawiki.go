@@ -111,16 +111,46 @@ func Import(wikidata string, dryrun bool, username, password, url string) error 
 				unchanged[pageTitle] = struct{}{}
 			} else {
 				if content != "" {
-					logrus.Infof("UPDATE %s", pageName)
+					logrus.Infof("UPDATING %s", pageName)
 					updates[pageTitle] = struct{}{}
 				}
 				if !dryrun {
-					if err := w.Edit(map[string]string{
-						"title":   pageName,
-						"text":    fileContent,
-						"summary": "automated page update",
-					}); err != nil {
-						logrus.Errorf("Error writing page %s to wiki: %s\n", pageName, err)
+					errCheck := true
+					for i := 0; i < 5 && errCheck; i++ {
+						if err := w.Edit(map[string]string{
+							"title":   pageName,
+							"text":    fileContent,
+							"summary": "automated page update",
+						}); err != nil {
+							logrus.Debugf("Error writing page %s to wiki: %s\n", pageName, err)
+
+							errCode := strings.Split(err.Error(), ":")[0]
+
+							if errCode == "badtoken" {
+								logrus.Warnf("CSRF Token auth failed while writing page %s to wiki, retrying after attempt %s: %s\n", pageName, strconv.Itoa(i+1), err)
+								errCheck = true
+								delete(w.Tokens, "csrf")
+								w.Logout()
+								w.Login(username, password)
+							} else if strings.Contains(errCode, "invalid") || strings.Contains(errCode, "denied") {
+								errCheck = false
+								logrus.Errorf("Error writing page %s to wiki, retrying after attempt %s: %s\n", pageName, strconv.Itoa(i+1), err)
+							} else if strings.Contains(errCode, "edit successful") {
+								errCheck = false
+								logrus.Warnf("Edit successful but contained no changes to page %s to wiki: %s\n", pageName, err)
+							} else if strings.Contains(errCode, "error occured during HTTP request") {
+								errCheck = true
+								logrus.Errorf("Error writing page %s to wiki, retrying after attempt %s: %s\n", pageName, strconv.Itoa(i+1), err)
+								w.Maxlag.Timeout = "90"
+							} else {
+								errCheck = true
+								logrus.Errorf("Error writing page %s to wiki, retrying after attempt %s: %s\n", pageName, strconv.Itoa(i+1), err)
+							}
+						} else {
+							w.Maxlag.Timeout = "30"
+							errCheck = false
+							logrus.Infof("SUCCESSFULLY UPDATED %s", pageName)
+						}
 					}
 				}
 			}
