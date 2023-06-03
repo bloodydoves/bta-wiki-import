@@ -16,7 +16,7 @@ Then you can upload them to the wiki or "import" them:
 2. Cut your PR. Codeowners are automatically added to it.
 3. Respond to any feedback.
 4. Merge on approval.
-5. Tagging
+5. Tagging  
     a. If new code was pushed, push a new tag to `master`. Tags must follow [semantic versioning](https://semver.org/) in the release format `v$major.$minor.$patch`.
     b. If no new code was pushed, i.e. updating this README, no new tags are required.
 6. Go releaser will automatically build a new release. Check the Actions page for any errors. Fix or report them as necessary.
