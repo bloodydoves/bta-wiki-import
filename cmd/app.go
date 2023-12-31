@@ -9,5 +9,6 @@ func Run() {
 	RootCmd.AddCommand(ImportCmd)
 	RootCmd.AddCommand(LintCmd)
 	RootCmd.AddCommand(PurgeCmd)
+	RootCmd.AddCommand(BulkUploadCmd)
 	RootCmd.Execute()
 }

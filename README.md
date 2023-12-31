@@ -1,14 +1,28 @@
 # bta-wiki-import
 
-A cli tool to dump various HBS BT "defs" to wikitext.
+A cli tool to manage various aspects of BTA's [Cargo](https://www.mediawiki.org/wiki/Extension:Cargo)-enabled wiki.
 
 ## Usage
+
+### Import data on new update
 
 First you need to convert the defs to wikitext or "export" them:
 `bta-wiki-import export ./mod-directory ./path-to-wikitext`
 
 Then you can upload them to the wiki or "import" them:
 `bta-wiki-import import -u Username@botname -l https://WEBSITE/api.php --passfile ./file-with-password ./path-to-wikitext` 
+
+### Cache Purge to redo templating across the site
+
+`bta-wiki-import cache-purge -u https://WEBSITE/api.php -l https://WEBSITE/files/list_of_mechs.txt`
+
+The `list_of_mechs.txt` file is maintained out of band by wiki Admins, if you think it is out of date, ask them to update it.
+
+### Bulk Image upload
+
+In a directory with files named as they are expected on the wiki:
+
+`bta-wiki-import bulk-upload -u Username@botname -l https://WEBSITE/api.php --passfile ./file-with-password`
 
 ## Contributing
 
