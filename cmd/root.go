@@ -6,8 +6,14 @@ import (
 )
 
 var (
-	flagColor bool
-	flagDebug bool
+	flagColor        bool
+	flagDebug        bool
+	flagWikiUsername string
+	flagWikiPassFile string
+	flagApiURL       string
+	flagListURL      string
+	flagDryRun       bool
+	flagWikiURL      string
 )
 
 var RootCmd = &cobra.Command{

@@ -1,28 +1,23 @@
 package cmd
 
 import (
-	"bufio"
+	uploader "bta-wiki-import/file-uploader"
 	"fmt"
 	"io/ioutil"
-	"net/http"
-	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
-	"time"
 
-	"github.com/spf13/cobra"
 	"cgt.name/pkg/go-mwclient"
+	"github.com/spf13/cobra"
 )
 
-var (
-	flagApiURL  string
-	flagWikiUsername string
-	flagWikiPassFile string
-)
+var ()
 
 var BulkUploadCmd = &cobra.Command{
 	Use:   "bulk-upload",
 	Short: "upload all pictures in current directory",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		// first, check the flags for a username. Prefer this over the
 		// environment variable.
 		username := flagWikiUsername
@@ -63,38 +58,37 @@ var BulkUploadCmd = &cobra.Command{
 			return err
 		}
 		err = uploadClient.Login(username, password)
-		csrfToken := uploadClient.GetToken(CSRFToken)
+		csrfToken, err := uploadClient.GetToken("CSRFToken")
 
 		uploadParams := map[string]string{
-			"action":          "upload",
-			"filename":        "file_1.jpg",
-			"format":          "json",
-			"token":           csrfToken,
-			"ignorewarnings":  "1",
+			"action":         "upload",
+			"filename":       "file_1.jpg",
+			"format":         "json",
+			"token":          csrfToken,
+			"ignorewarnings": "1",
 		}
 
 		dir, err := os.Getwd()
 		if err != nil {
 			return err
 		}
-	
+
 		// Use io.WalkDir to walk through the files in the current directory
 		err = filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
 			if err != nil {
 				return err
 			}
-	
+
 			// Check if the file has one of the specified extensions
 			ext := filepath.Ext(path)
 			if ext == ".jpg" || ext == ".png" || ext == ".svg" {
-				(*uploadParams)["filename"] = filepath.Base(path)
+				(uploadParams)["filename"] = filepath.Base(path)
 				// Call the arbitrary function with the file name
-				return uploader.Upload(url, targetFile, uploadParams)
+				return uploader.Upload(url, filepath.Base(path), uploadParams)
 			}
-			(*uploadParams)["filename"] = filepath.Base(path)
-			
+
 		})
-	
+
 	},
 }
 

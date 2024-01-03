@@ -12,10 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	flagApiURL  string
-	flagListURL string
-)
+var ()
 
 var PurgeCmd = &cobra.Command{
 	Use:   "cache-purge",

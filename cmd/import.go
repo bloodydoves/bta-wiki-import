@@ -16,12 +16,7 @@ const (
 	PASSWORD_ENV = "WIKI_PASS"
 )
 
-var (
-	flagDryRun       bool
-	flagWikiUsername string
-	flagWikiPassFile string
-	flagWikiURL      string
-)
+var ()
 
 var ImportCmd = &cobra.Command{
 	Use:   "import <wikidata>",
