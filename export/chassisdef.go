@@ -86,9 +86,9 @@ func (cl ChassisLocation) ToWiki(chassisID string) string {
 	omniHardpoints := []string{}
 	for _, hardpoint := range cl.Hardpoints {
 		if !hardpoint.Omni {
-			hardpoints = append(hardpoints, hardpoint.WeaponMount)
+			hardpoints = append(hardpoints, hardpoint.WeaponMountID)
 		} else {
-			omniHardpoints = append(omniHardpoints, hardpoint.WeaponMount)
+			omniHardpoints = append(omniHardpoints, hardpoint.WeaponMountID)
 		}
 	}
 

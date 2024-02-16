@@ -57,8 +57,14 @@ var BulkUploadCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
 		err = uploadClient.Login(username, password)
-		csrfToken, err := uploadClient.GetToken("CSRFToken")
+		if err != nil {
+			return err
+		}
+
+		csrfToken, err := uploadClient.GetToken(mwclient.CSRFToken)
+		fmt.Printf("Token should be %v\n", csrfToken)
 
 		uploadParams := map[string]string{
 			"action":         "upload",
@@ -73,6 +79,8 @@ var BulkUploadCmd = &cobra.Command{
 			return err
 		}
 
+		fmt.Printf("dir is %v\n", dir)
+
 		// Use io.WalkDir to walk through the files in the current directory
 		err = filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
 			if err != nil {
@@ -81,14 +89,22 @@ var BulkUploadCmd = &cobra.Command{
 
 			// Check if the file has one of the specified extensions
 			ext := filepath.Ext(path)
-			if ext == ".jpg" || ext == ".png" || ext == ".svg" {
+			if ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".svg" {
 				(uploadParams)["filename"] = filepath.Base(path)
+				fmt.Printf("%v\n", uploadParams)
 				// Call the arbitrary function with the file name
-				return uploader.Upload(url, filepath.Base(path), uploadParams)
+				fmt.Printf("uploading file: %v\n", filepath.Base(path))
+				err = uploader.Upload(url, filepath.Base(path), uploadParams)
+				if err != nil {
+					return err
+				}
+				/*} else {
+				return fmt.Errorf("%v is not a valid file for upload", ext)*/
 			}
-
+			return nil
 		})
 
+		return err
 	},
 }
 

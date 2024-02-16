@@ -39,7 +39,7 @@ func Upload(url, targetFile string, params map[string]string) error {
 
 	req, err := http.NewRequest("POST", url, &buff)
 	if err != nil {
-		return
+		return err
 	}
 	// Don't forget to set the content type, this will contain the boundary.
 	req.Header.Set("Content-Type", writer.FormDataContentType())
@@ -55,5 +55,5 @@ func Upload(url, targetFile string, params map[string]string) error {
 	fmt.Println("response Headers:", response.Header)
 	body, _ := ioutil.ReadAll(response.Body)
 	fmt.Println("response Body:", string(body))
-	return body
+	return err
 }
