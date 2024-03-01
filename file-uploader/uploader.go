@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
+	"net/http/cookiejar"
+	"net/url"
 	"os"
 )
 
@@ -34,17 +36,23 @@ func createMultipartFormData(fieldName, fileName string, params map[string]strin
 	return buff, writer
 }
 
-func Upload(url, targetFile string, params map[string]string) error {
+func Upload(targetUrl, targetFile string, params map[string]string, stolencookies []*http.Cookie) error {
 	buff, writer := createMultipartFormData("file", targetFile, params)
+	stolenJar, err := cookiejar.New(nil)
+	jarUrl, err := url.Parse(targetUrl)
 
-	req, err := http.NewRequest("POST", url, &buff)
+	stolenJar.SetCookies(jarUrl, stolencookies)
+
+	req, err := http.NewRequest("POST", targetUrl, &buff)
 	if err != nil {
 		return err
 	}
 	// Don't forget to set the content type, this will contain the boundary.
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 
-	client := &http.Client{}
+	client := &http.Client{
+		Jar: stolenJar,
+	}
 	response, error := client.Do(req)
 	if err != nil {
 		panic(error)

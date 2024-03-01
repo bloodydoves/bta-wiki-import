@@ -65,6 +65,7 @@ var BulkUploadCmd = &cobra.Command{
 
 		csrfToken, err := uploadClient.GetToken(mwclient.CSRFToken)
 		fmt.Printf("Token should be %v\n", csrfToken)
+		stolenCookies := uploadClient.DumpCookies()
 
 		uploadParams := map[string]string{
 			"action":         "upload",
@@ -94,7 +95,7 @@ var BulkUploadCmd = &cobra.Command{
 				fmt.Printf("%v\n", uploadParams)
 				// Call the arbitrary function with the file name
 				fmt.Printf("uploading file: %v\n", filepath.Base(path))
-				err = uploader.Upload(url, filepath.Base(path), uploadParams)
+				err = uploader.Upload(url, filepath.Base(path), uploadParams, stolenCookies)
 				if err != nil {
 					return err
 				}
